@@ -1,6 +1,9 @@
 ﻿
 using System;
 using System.Collections;
+using System.Collections.Generic;
+using System.Runtime.CompilerServices;
+using System.Runtime.InteropServices;
 
 namespace ContactDatabase {
     
@@ -9,8 +12,11 @@ namespace ContactDatabase {
      * a následně s jeho pomocí v této databázi fulltextově vyhledávat, položky do databáze přidávat, nebo mazat
      * Záměrem je zdigitalizovat klasický papírový adresář kontaktů a usnadnit tak práci zpracování a manipulaci s kontaktními údaji.
      */
-
+   
     internal class Program {
+   
+        public static List<Contact> contacts = new List<Contact>();
+        
         
         /**
          * Main method
@@ -21,7 +27,7 @@ namespace ContactDatabase {
         public static void Main(string[] args) {
             
             Console.Clear();
-            Console.ForegroundColor = ConsoleColor.Cyan;
+            Console.ForegroundColor = ConsoleColor.DarkBlue;
             Console.WriteLine("Dobrý den,\nvítejte v databázi kontaktů. Zde si můžete ukládat, prohlížet a vyhledávat kontakty.\n");
 
             var menuItems = new ArrayList();
@@ -29,6 +35,7 @@ namespace ContactDatabase {
             menuItems.Add("Seznam všech kontaktů");
             menuItems.Add("Vytvoření nového kontaktu");
             menuItems.Add("Vyhledávání v kontaktech");
+            menuItems.Add("Konec");
             
             Menu(menuItems);
         }
@@ -43,6 +50,8 @@ namespace ContactDatabase {
 
         public static void Menu(ArrayList menuItems) {
             
+            Console.ForegroundColor = ConsoleColor.Cyan;
+            
             Console.WriteLine("MENU");
             Console.WriteLine("----------------");
 
@@ -56,7 +65,7 @@ namespace ContactDatabase {
             }
             
             Console.ForegroundColor = ConsoleColor.Cyan;
-            Console.Write("Vyberte položku v pomocí klávesnice (podle číselného označení): ");
+            Console.Write("Vyberte položku s pomocí klávesnice (podle číselného označení): ");
             Console.ResetColor();
             
             var parse = int.TryParse(Console.ReadLine(), out var item);
@@ -85,6 +94,16 @@ namespace ContactDatabase {
 
                         break;
                     
+                    case 4:
+
+                        Console.WriteLine("Nashledanou!");
+                        
+                        return;
+                        
+                        // Konec :-)
+
+                        break;
+                    
                 }
 
             } else {
@@ -105,7 +124,23 @@ namespace ContactDatabase {
 
         public static void ListContacts() {
             
-            Console.WriteLine("Vybrali jste Seznam kontaktů.");
+            Console.Clear();
+            
+            Console.ForegroundColor = ConsoleColor.Green;
+            Console.WriteLine("Vypisuji seznam kontaktů.\n");
+            Console.ResetColor();
+
+            if(contacts.Count > 0) {            
+            
+                foreach (Contact contact in contacts) {
+                    
+                    Console.WriteLine(contact.fullname + " | T: " + contact.phone + " | E: " + contact.email);
+                }
+                
+            } else {
+                
+                Console.WriteLine("Seznam kontaktů je bohužel zatím prázdný...");
+            }
         }
         
         /**
@@ -115,8 +150,45 @@ namespace ContactDatabase {
          */
 
         public static void CreateNewContact() {
+          
+            Console.Clear();
             
-            Console.WriteLine("Vybrali jste Vytvoření nového kontaktu.");
+            Console.ForegroundColor = ConsoleColor.Green;
+            Console.Write("Vybrali jste Vytvoření nového kontaktu.");
+            Console.ResetColor();
+            
+            Console.Write("\nZadejte celé jméno: ");
+
+            var fullname = Console.ReadLine();
+            
+            Console.Write("Zadejte telefoní číslo: ");
+            
+            var phone = Console.ReadLine();
+            
+            Console.Write("Zadejte e-amilovou schránku: ");
+
+            var email = Console.ReadLine();
+
+            string saveOrNot;
+            
+            do {
+
+                Console.Write("Chcete data uložit? (Ano|Ne):");
+                
+                 saveOrNot = Console.ReadLine();
+
+            } while (saveOrNot != "Ano" && saveOrNot != "Ne");
+
+            if (saveOrNot == "Ano") {
+
+                contacts.Add(new Contact(fullname, phone, email));
+                
+                Console.Clear();
+                
+                Console.ForegroundColor = ConsoleColor.Green;
+                Console.Write("Kontakt byl úspěšně uložen.\n");
+            }
+
         }
         
         /**
@@ -180,6 +252,21 @@ namespace ContactDatabase {
      * ===================================================
      */
 
-        
+    class Contact {
+
+        public string fullname;
+
+        public string phone;
+
+        public string email;
+
+        public Contact(string fullname, string phone, string email) {
+
+            this.fullname = fullname;
+            this.phone = phone;
+            this.email = email;
+        }
+
+    }
 }
     
