@@ -165,7 +165,7 @@ namespace ContactDatabase {
             
             var phone = Console.ReadLine();
             
-            Console.Write("Zadejte e-amilovou schránku: ");
+            Console.Write("Zadejte e-mailovou adresu: ");
 
             var email = Console.ReadLine();
 
@@ -173,7 +173,7 @@ namespace ContactDatabase {
             
             do {
 
-                Console.Write("Chcete data uložit? (Ano|Ne):");
+                 Console.Write("Chcete data uložit? (Ano|Ne):");
                 
                  saveOrNot = Console.ReadLine();
 
