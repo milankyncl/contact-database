@@ -2,8 +2,7 @@
 using System;
 using System.Collections;
 using System.Collections.Generic;
-using System.Runtime.CompilerServices;
-using System.Runtime.InteropServices;
+using System.IO;
 
 namespace ContactDatabase {
     
@@ -17,6 +16,9 @@ namespace ContactDatabase {
    
         public static List<Contact> contacts = new List<Contact>();
         
+        public static StreamWriter streamWriter;
+        
+        public static string filePath = "contacts.txt";
         
         /**
          * Main method
@@ -25,8 +27,10 @@ namespace ContactDatabase {
          */
         
         public static void Main(string[] args) {
+
+            initializeDatabase();
             
-            Console.Clear();
+            // Console.Clear();
             Console.ForegroundColor = ConsoleColor.DarkBlue;
             Console.WriteLine("Dobrý den,\nvítejte v databázi kontaktů. Zde si můžete ukládat, prohlížet a vyhledávat kontakty.\n");
 
@@ -183,6 +187,8 @@ namespace ContactDatabase {
 
                 contacts.Add(new Contact(fullname, phone, email));
                 
+                UpdateData();
+                
                 Console.Clear();
                 
                 Console.ForegroundColor = ConsoleColor.Green;
@@ -200,6 +206,46 @@ namespace ContactDatabase {
         public static void SearchContact() {
             
             Console.WriteLine("Vybrali jste Vyhledávání kontaktů.");
+        }
+        
+        /**
+         * Update data
+         * ----------
+         */
+
+        private static void UpdateData() {
+            
+            using (StreamWriter sw = new StreamWriter(filePath, true)) {
+                    
+                foreach (var contact in contacts) {
+                
+                    sw.WriteLine(contact.fullname + "|" + contact.phone + "|" + contact.email);
+                }
+                
+                sw.Close();
+            }
+        }
+        
+        /**
+         * Initialize database
+         * -------------------
+         */
+
+        private static void initializeDatabase() {
+            
+            using (StreamWriter sw = new StreamWriter(filePath, true)) {
+                
+                sw.Close();
+                
+                string[] lines = System.IO.File.ReadAllLines(filePath);
+                
+                foreach (string contact in lines) {
+                    
+                    string[] parts = contact.Split('|');
+                    
+                    contacts.Add(new Contact(parts[0], parts[1], parts[2]));
+                }
+            }
         }
     }
     
